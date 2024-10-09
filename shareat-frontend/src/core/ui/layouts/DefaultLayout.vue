@@ -52,14 +52,14 @@ export default {
     return {
       navItems: [
         {
-          title: 'Главная',
-          icon: 'mdi-account-supervisor',
-          link: '/home',
+          title: 'Каталог',
+          icon: 'mdi-animation',
+          link: '/catalog',
         },
         {
-          title: 'О проекте',
-          icon: 'mdi-file-link-outline',
-          link: '/about',
+          title: 'Личный кабинет',
+          icon: 'mdi-account',
+          link: '/profile',
         },
       ],
     };

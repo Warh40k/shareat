@@ -98,7 +98,7 @@ export default {
 
         this.SET_AUTH_DATA(user);
 
-        this.$router.push({ name: 'home' });
+        this.$router.push({ name: 'catalog' });
       } catch (error) {
         this.ADD_ALERT({ type: ALERT_TYPES.ERROR, text: error.message });
       } finally {

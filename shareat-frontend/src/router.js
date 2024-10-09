@@ -10,13 +10,13 @@ const routes = [
     path: '/',
     name: 'main',
     redirect: {
-      name: 'home',
+      name: 'catalog',
     },
   },
   {
-    path: '/home',
-    name: 'home',
-    component: () => import(/* webpackChunkName: "home" */ '@/modules/home/ui/views/HomeView.vue'),
+    path: '/catalog',
+    name: 'catalog',
+    component: () => import(/* webpackChunkName: "catalog" */ '@/modules/catalog/ui/views/CatalogView.vue'),
     meta: {
       isProtected: true,
     },
@@ -32,9 +32,35 @@ const routes = [
   {
     path: '/register',
     name: 'register',
-    component: () => import(/* webpackChunkName: "login" */ '@/modules/register/ui/views/RegisterView.vue'),
+    component: () => import(/* webpackChunkName: "register" */ '@/modules/register/ui/views/RegisterView.vue'),
     meta: {
       layout: 'EmptyLayout',
+    },
+  },
+
+  // каталог
+  {
+    path: '/category/cars',
+    name: 'cars',
+    component: () => import(/* webpackChunkName: "cars" */ '@/modules/catalog/ui/views/CarsCategoryView.vue'),
+    meta: {
+      isProtected: true,
+    },
+  },
+  {
+    path: '/computers',
+    name: 'computers',
+    component: () => import(/* webpackChunkName: "computers" */ '@/modules/catalog/ui/views/ComputersCategoryView.vue'),
+    meta: {
+      isProtected: true,
+    },
+  },
+  {
+    path: '/sport',
+    name: 'sport',
+    component: () => import(/* webpackChunkName: "sport" */ '@/modules/catalog/ui/views/SportsCategoryView.vue'),
+    meta: {
+      isProtected: true,
     },
   },
 ];
