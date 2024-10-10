@@ -10,11 +10,10 @@
 
         <v-row>
           <v-col cols="12" sm="9">
-            <v-btn small tile depressed color="main-color" class="white--text mr-2">
+            <v-btn small tile depressed color="main-color" class="white--text mr-2" @click="showCreateProduct = true">
               Добавить
               <v-icon right dark> mdi-plus </v-icon>
             </v-btn>
-            <v-btn tile small outlined color="main-color"> Удаленные </v-btn>
           </v-col>
           <v-col cols="12" sm="3">
             <v-text-field
@@ -33,20 +32,26 @@
         <ProductCard :card-data="car" />
       </v-col>
     </v-row>
+    <SidebarModal v-model="showCreateProduct" title="Создание продукта">
+      <CreateProductForm v-if="showCreateProduct" @success="createProduct" @cancel="showCreateProduct = false" />
+    </SidebarModal>
   </v-container>
 </template>
 
 <script>
 import ProductCard from '../components/ProductCard.vue';
+import CreateProductForm from '../components/product/sidebar-modal/CreateProductForm.vue';
 
 export default {
   name: 'CarsCategoryView',
 
   components: {
     ProductCard,
+    CreateProductForm,
   },
   data() {
     return {
+      showCreateProduct: false,
       carsList: [
         {
           id: 1,
@@ -76,6 +81,12 @@ export default {
         },
       ],
     };
+  },
+
+  methods: {
+    createProduct() {
+      this.showCreateProduct = true;
+    },
   },
 };
 </script>

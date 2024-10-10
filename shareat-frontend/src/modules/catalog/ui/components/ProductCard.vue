@@ -41,18 +41,39 @@
         </v-list>
       </v-menu>
     </div>
+
+    <CenterModal title="Удаление продукта" :is-open="showDeleteProduct" @close="showDeleteProduct = false">
+      <DeleteProductForm
+        v-if="showDeleteProduct"
+        :id="cardData.id"
+        :title="cardData.title"
+        @success="deleteProduct"
+        @cancel="showDeleteProduct = false" />
+    </CenterModal>
   </div>
 </template>
 
 <script>
+import DeleteProductForm from '@/modules/catalog/ui/components/product/central-modal/DeleteProductForm.vue';
+
 export default {
   name: 'ProductCard',
+
+  components: {
+    DeleteProductForm,
+  },
 
   props: {
     cardData: {
       type: Object,
       required: true,
     },
+  },
+
+  data() {
+    return {
+      showDeleteProduct: false,
+    };
   },
 
   methods: {
@@ -62,6 +83,7 @@ export default {
 
     deleteCard(id) {
       console.log('Удалить карточку с id:', id);
+      this.showDeleteProduct = true;
     },
   },
 };

@@ -40,12 +40,14 @@ import DrawerNavigation from '@/core/ui/components/DrawerNavigation.vue';
 import { Logout } from '@/modules/auth/repositories/auth-repository';
 
 import ALERT_TYPES from '@/modules/alert/constants/alert-types';
+import SidebarContentWrapper from '@/core/ui/components/shared/sidebar-modal/SidebarContentWrapper.vue';
 
 export default {
   name: 'DefaultLayout',
 
   components: {
     DrawerNavigation,
+    SidebarContentWrapper,
   },
 
   data() {
