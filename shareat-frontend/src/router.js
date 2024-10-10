@@ -22,6 +22,22 @@ const routes = [
     },
   },
   {
+    path: '/admin',
+    name: 'admin',
+    component: () => import(/* webpackChunkName: "admin" */ '@/modules/admin/ui/views/AdminView.vue'),
+    meta: {
+      isProtected: true,
+    },
+  },
+  {
+    path: '/orders',
+    name: 'orders',
+    component: () => import(/* webpackChunkName: "orders" */ '@/modules/orders/ui/views/OrdersView.vue'),
+    meta: {
+      isProtected: true,
+    },
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import(/* webpackChunkName: "login" */ '@/modules/auth/ui/views/LoginView.vue'),
@@ -40,12 +56,24 @@ const routes = [
 
   // каталог
   {
-    path: '/category/cars',
+    path: '/cars',
     name: 'cars',
     component: () => import(/* webpackChunkName: "cars" */ '@/modules/catalog/ui/views/CarsCategoryView.vue'),
     meta: {
       isProtected: true,
     },
+  },
+  {
+    path: '/cars/:id',
+    name: 'car-details',
+    component: () => import(/* webpackChunkName: "cars" */ '@/modules/catalog/ui/views/ProductDetailsView.vue'),
+    meta: {
+      isProtected: true,
+    },
+    props: (route) => ({
+      product: route.params.product,
+      id: parseInt(route.params.id, 10),
+    }),
   },
   {
     path: '/computers',

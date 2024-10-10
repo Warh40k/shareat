@@ -57,9 +57,19 @@ export default {
           link: '/catalog',
         },
         {
+          title: 'Заказы',
+          icon: 'mdi-order-bool-descending-variant',
+          link: '/orders',
+        },
+        {
           title: 'Личный кабинет',
           icon: 'mdi-account',
           link: '/profile',
+        },
+        {
+          title: 'Администрирование',
+          icon: 'mdi-cog',
+          link: '/admin',
         },
       ],
     };

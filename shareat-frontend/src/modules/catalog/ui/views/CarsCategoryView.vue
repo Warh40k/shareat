@@ -54,9 +54,8 @@ export default {
           description:
             'The Toyota Supra (Japanese: トヨタ・スープラ, Hepburn: Toyota Sūpura) is a sports car and grand tourer manufactured by the Toyota Motor Corporation beginning in 1978. The name "supra" is derived from the Latin prefix, meaning "above", "to surpass" or "go beyond"',
           price: '10 000',
-          pathName: 'cars',
           image:
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Black_1997_Toyota_Supra_Limited_Edition_6_Speed_Twin_Turbo_with_Targa_Top.png/275px-Black_1997_Toyota_Supra_Limited_Edition_6_Speed_Twin_Turbo_with_Targa_Top.png',
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Black_1997_Toyota_Supra_Limited_Edition_6_Speed_Twin_Turbo_with_Targa_Top.png/1920px-Black_1997_Toyota_Supra_Limited_Edition_6_Speed_Twin_Turbo_with_Targa_Top.png',
         },
         {
           id: 2,
@@ -64,9 +63,7 @@ export default {
           description:
             'Из особенностей версии: 16-дюймовые литые диски, низкопрофильные шины «Yokohama», передние и задние тормозные диски увеличенного диаметра, уменьшенный на 20 мм дорожный просвет и газонаполненные амортизаторы.',
           price: '10 000 000',
-          pathName: 'cars',
-          image:
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Lada_Granta_2018_facelift.jpg/305px-Lada_Granta_2018_facelift.jpg',
+          image: 'https://upload.wikimedia.org/wikipedia/commons/1/11/Lada_Granta_2018_facelift.jpg',
         },
         {
           id: 3,
@@ -74,7 +71,6 @@ export default {
           description:
             'Гоночный автомобиль с открытыми колёсами команды Red Bull Racing, разработанный и построенный под руководством Эдриана Ньюи для участия в гонках Формулы-1 сезона 2011 Формулы-1. За рулём этого автомобиля Себастьян Феттель выиграл свой второй титул Чемпиона мира.',
           price: '100',
-          pathName: 'cars',
           image:
             'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Sebastian_Vettel_2011_Malaysia_FP1_1.jpg/1200px-Sebastian_Vettel_2011_Malaysia_FP1_1.jpg',
         },

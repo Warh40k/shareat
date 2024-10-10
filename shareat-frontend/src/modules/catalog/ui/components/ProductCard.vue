@@ -1,7 +1,7 @@
 <template>
-  <router-link :to="{ name: cardData.pathName }">
-    <div class="root-card">
-      <v-container color class="text-left mx-auto" fluid>
+  <div class="root-card">
+    <v-container color class="text-left mx-auto" fluid>
+      <router-link :to="{ name: `car-details`, params: { id: cardData.id, product: cardData } }">
         <v-row>
           <v-col cols="12" lg="8" sm="12">
             <div class="card-title">{{ cardData.title }}</div>
@@ -14,15 +14,34 @@
             </div>
           </v-col>
         </v-row>
-      </v-container>
-      <div class="card-footer">
-        <v-btn small color="main-color" right class="white--text text order-btn ml-3">
-          Оформить
-          <v-icon right dark>mdi-cart</v-icon>
-        </v-btn>
-      </div>
+      </router-link>
+    </v-container>
+    <div class="card-footer">
+      <v-btn small color="main-color" right class="white--text text order-btn ml-3">
+        Оформить
+        <v-icon right dark>mdi-cart</v-icon>
+      </v-btn>
+
+      <v-menu offset-y bottom>
+        <template #activator="{ on, attrs }">
+          <v-btn icon v-bind="attrs" v-on="on">
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item @click="editCard(cardData.id)">
+            <v-icon>mdi-pencil</v-icon>
+            <v-list-item-title class="px-3">Редактировать</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="deleteCard(cardData.id)">
+            <v-icon>mdi-delete</v-icon>
+            <v-list-item-title class="px-3">Удалить</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </div>
-  </router-link>
+  </div>
 </template>
 
 <script>
@@ -33,6 +52,16 @@ export default {
     cardData: {
       type: Object,
       required: true,
+    },
+  },
+
+  methods: {
+    editCard(id) {
+      console.log('Редактировать карточку с id:', id);
+    },
+
+    deleteCard(id) {
+      console.log('Удалить карточку с id:', id);
     },
   },
 };
@@ -82,7 +111,8 @@ img {
 
 .card-footer {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: row-reverse;
+  justify-content: space-between; /* Размещаем элементы по краям */
   align-items: center;
 }
 </style>
