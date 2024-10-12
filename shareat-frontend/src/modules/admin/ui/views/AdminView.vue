@@ -176,10 +176,8 @@ export default {
       try {
         this.ADD_LOADER();
 
-        //const result = await GetAllUsers(this.pageInfo);
+        //const result = await GetAllUsers();
 
-        this.pageInfo.totalPages = result.totalPages;
-        this.products = result.data;
         this.userList = result.data;
       } catch (error) {
         this.ADD_ALERT({ type: ALERT_TYPES.ERROR, text: error.message });
@@ -241,13 +239,8 @@ export default {
         clearTimeout(this.searchTimeoutId);
       }
 
-      const filterValue = this.pageInfo.filters[0].value;
-
       this.searchTimeoutId = setTimeout(() => {
-        if (!filterValue || filterValue.length > 2) {
-          this.pageInfo.page = 1;
-          this.fetchUsers();
-        }
+        this.fetchUsers();
       }, 400);
     },
   },
