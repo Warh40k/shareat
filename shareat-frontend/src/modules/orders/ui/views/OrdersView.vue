@@ -67,7 +67,7 @@
                             <v-icon color="success-color">mdi-check</v-icon>
                           </v-btn>
                         </template>
-                        <template v-if="order.statusId === 1">
+                        <template v-if="order.statusId === 2">
                           <v-btn
                             v-ripple="false"
                             title="Подтвердить возврат"

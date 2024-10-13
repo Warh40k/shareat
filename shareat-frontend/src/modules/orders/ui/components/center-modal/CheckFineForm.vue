@@ -29,7 +29,7 @@ export default {
 
     getDelay() {
       const now = new Date();
-      const delay = new Date(this.order.endDate).getTime() - now.getTime();
+      const delay = now.getTime() - new Date(this.order.endDate).getTime();
       const number = Math.ceil(delay / (1000 * 60 * 60 * 24));
 
       if (number > 10 && [11, 12, 13, 14].includes(number % 100)) return `${number} дней`;
@@ -37,7 +37,7 @@ export default {
 
       if ([2, 3, 4].includes(lastNum)) return `${number} дня`;
       if ([5, 6, 7, 8, 9, 0].includes(lastNum)) return `${number} дней`;
-      return `${number}день`;
+      return `${number} день`;
     },
 
     cancel() {

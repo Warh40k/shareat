@@ -212,17 +212,6 @@ export default {
       this.showChangePassword = false;
     },
 
-    clickChangeStatusBtn(user) {
-      this.currentUser = user;
-      this.showChangeStatus = true;
-    },
-
-    changeStatus() {
-      this.showChangeStatus = false;
-      this.currentUser = null;
-      //this.fetchUsers();
-    },
-
     clickDeleteUserBtn(user) {
       this.currentUser = user;
       this.showDeleteUser = true;

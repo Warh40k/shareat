@@ -91,6 +91,14 @@ const routes = [
       isProtected: true,
     },
   },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: () => import(/* webpackChunkName: "sport" */ '@/modules/user/ui/views/UserProfileView.vue'),
+    meta: {
+      isProtected: true,
+    },
+  },
 ];
 
 const router = new VueRouter({
