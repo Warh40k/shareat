@@ -37,6 +37,7 @@
             <ValidationProvider v-slot="{ errors }" rules="required">
               <v-text-field
                 v-model="controls.price"
+                type="number"
                 :error-messages="errors"
                 dense
                 color="main-color"
