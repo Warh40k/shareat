@@ -1,0 +1,47 @@
+version: "3.7"
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:16
+    volumes:
+      - ./postgres/postgres_database:/var/lib/postgresql/data
+    ports:
+      - 5433:5433
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgAdmin@pg.com
+      - PGADMIN_DEFAULT_PASSWORD=Password
+    ports:
+      - 5555:80
+    volumes:
+      - ./pgadmin/pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+
+  backend:
+  container_name: backend
+  build: 
+      context: #TODO: указать контекст   
+      dockerfile: ./Dockerfile
+  ports:
+      - 8000:8000
+  restart: unless-stopped
+
+  frontend:
+    container_name: frontend
+    build: 
+      context: shareat-frontend/  
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+    restart: unless-stopped
