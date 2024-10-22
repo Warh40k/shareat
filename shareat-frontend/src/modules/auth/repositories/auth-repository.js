@@ -1,10 +1,18 @@
-import httpClient from '@/core/plugins/http-client';
+import axios from 'axios';
 
-const apiRoute = '/api/Auth';
+const apiRoute = '/api/auth';
 
-export async function Login(authData) {
-  // const result = await httpClient
-  //   .post(`${apiRoute}/Login`, authData)
+export async function Login(login, password) {
+  const data = {
+    login,
+    password,
+  };
+
+  // TODO: уточнить роут
+  const url = `${apiRoute}/userAuth`;
+
+  // const result = await axios
+  //   .post(url, data)
   //   .then((response) => response.data)
   //   .catch((error) => {
   //     throw new Error(error?.response?.data?.message || 'Ошибка авторизации');
@@ -15,12 +23,16 @@ export async function Login(authData) {
 }
 
 export async function Logout() {
-  const result = await httpClient
-    .post(`${apiRoute}/Logout`)
-    .then((response) => response.data)
-    .catch((error) => {
-      throw new Error(error?.response?.data?.message || 'Ошибка выхода');
-    });
+  // TODO: уточнить роут
+  const url = `${apiRoute}/logout`;
 
-  return result;
+  // const result = await axios
+  //   .post(url, null)
+  //   .then((response) => response.data)
+  //   .catch((error) => {
+  //     throw new Error(error?.response?.data?.message || 'Ошибка выхода');
+  //   });
+
+  // return result;
+  return true;
 }
