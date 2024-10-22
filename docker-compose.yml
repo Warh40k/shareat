@@ -29,18 +29,18 @@ services:
 
 
   backend:
-  container_name: backend
-  build: 
-      context: #TODO: указать контекст   
+    container_name: backend
+    build: 
+      context: . #TODO: указать контекст
       dockerfile: ./Dockerfile
-  ports:
+    ports:
       - 8000:8000
-  restart: unless-stopped
+    restart: unless-stopped
 
   frontend:
     container_name: frontend
     build: 
-      context: shareat-frontend/  
+      context: ./shareat-frontend/  
       dockerfile: ./Dockerfile
     ports:
       - 8080:8080
