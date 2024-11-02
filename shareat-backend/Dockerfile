@@ -10,10 +10,16 @@ RUN apt-get update && apt-get install -y gcc libpq-dev && rm -rf /var/lib/apt/li
 COPY pyproject.toml poetry.lock* ./
 
 # Устанавливаем Poetry
-RUN pip install --no-cache-dir poetry && poetry install --no-root --without dev && rm -rf ~/.cache/pip
+RUN pip install --no-cache-dir poetry
+
+# Устанавливаем зависимости в системную среду, чтобы не использовать poetry run
+RUN poetry config virtualenvs.create false && poetry install --no-root --without dev
 
 # Копируем оставшиеся файлы проекта
 COPY . .
 
-# Запускаем приложение
-# CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Открываем порт (если нужно, для работы сервера)
+EXPOSE 8000
+
+# Команда запуска (можно заменить на запуск скрипта напрямую)
+# CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
