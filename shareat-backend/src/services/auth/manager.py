@@ -60,23 +60,23 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         role_data = {}
         if user_dict.get("role_id") == 1:  # Client
             role_data = {
-                "address": getattr(user_create, "address", ""),
-                "phone_number": getattr(user_create, "phone_number", ""),
-                "hobbies": getattr(user_create, "hobbies", ""),
+                "address": getattr(user_create, "address", None),
+                "phone_number": getattr(user_create, "phone_number", None),
+                "hobbies": getattr(user_create, "hobbies", None),
                 "money": getattr(user_create, "money", 0),
             }
-        elif user_dict.get("role_id") == 2:  # Admin
+        elif user_dict.get("role_id") == 0:  # Admin
             role_data = {
-                "department": getattr(user_create, "department", ""),
+                "department": getattr(user_create, "department", None),
             }
-        elif user_dict.get("role_id") == 3:  # Employee
+        elif user_dict.get("role_id") == 2:  # Employee
             role_data = {
-                "department": getattr(user_create, "department", ""),
-                "position": getattr(user_create, "position", ""),
+                "department": getattr(user_create, "department", None),
+                "position": getattr(user_create, "position", None),
             }
-
+            
         created_user = await self.user_db.create_user_with_role(user_dict, role_data, Admin if user_dict.get(
-            "role_id") == 2 else Employee if user_dict.get("role_id") == 3 else Client)
+            "role_id") == 0 else Employee if user_dict.get("role_id") == 2 else Client)
 
         await self.on_after_register(created_user, request)
 
@@ -111,17 +111,17 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
                 client_data = user.client
                 if client_data is not None:
                     client_details = ClientRead.model_validate(client_data)
-                    user_data = user_data.copy(update=client_details.dict())
+                    user_data = user_data.model_copy(update=client_details.model_dump())
             elif user.role_id == 0:
                 admin_data = user.admin
                 if admin_data is not None:
                     admin_details = AdminRead.model_validate(admin_data)
-                    user_data = user_data.copy(update=admin_details.dict())
+                    user_data = user_data.model_copy(update=admin_details.model_dump())
             elif user.role_id == 2:
                 employee_data = user.employee
                 if employee_data is not None:
                     employee_details = EmployeeRead.model_validate(employee_data)
-                    user_data = user_data.copy(update=employee_details.dict())
+                    user_data = user_data.model_copy(update=employee_details.model_dump())
 
             return user_data
         except ValueError as e:

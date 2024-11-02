@@ -16,15 +16,15 @@ class ClientRead(BaseModel):
 
 
 class AdminRead(BaseModel):
-    department: str
+    department: str | None = None
 
     class Config:
         from_attributes = True
 
 
 class EmployeeRead(BaseModel):
-    department: str
-    position: str
+    department: str | None = None
+    position: str | None = None
 
     class Config:
         from_attributes = True
@@ -32,11 +32,11 @@ class EmployeeRead(BaseModel):
 
 class UserRead(schemas.BaseUser[int]):
     id: int
-    username: str
-    firstname: str
-    secondname: str
-    email: str
-    role_id: int
+    username: str | None = None
+    firstname: str | None = None
+    secondname: str | None = None
+    email: str | None = None
+    role_id: int | None = 1
     is_active: bool = True
     is_superuser: bool = False
     is_verified: bool = False
