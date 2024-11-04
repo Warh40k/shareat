@@ -57,7 +57,7 @@ services:
   frontend:
     container_name: frontend
     build: 
-      context: shareat-frontend/  
+      context: ./shareat-frontend/  
       dockerfile: ./Dockerfile
     ports:
       - 8080:8080

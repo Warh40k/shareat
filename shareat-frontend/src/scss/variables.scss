@@ -1,0 +1,46 @@
+// --- Переопределение переменных Vuetify ---
+
+// Основной шрифт
+$body-font-family: 'Lato', 'Arial', sans-serif;
+
+// Сетка
+$grid-breakpoints: (
+  'sm': 640px,
+  'lg': 1280px - 16px,
+);
+
+// Обнуление border-radius
+/* stylelint-disable-next-line length-zero-no-unit */
+// $border-radius-root: 0px;
+
+$material-light: (
+  'background': #f6f9fe,
+);
+
+@import '~vuetify/src/styles/styles.sass';
+// --- Конец переопределение переменных Vuetify ---
+
+// Цветовая палитра
+$main-color: #3E6950;
+$second-color: #DFFBEB;
+$info-color: #75C797;
+$background-color: #6D7A73;
+$success-color: #008c36;
+$warning-color: #916c00;
+$error-color: #c72b2b;
+$color-gray-1: #221f1f;
+$color-gray-2: #403f41;
+$color-gray-3: #57585a;
+$color-gray-4: #6c6e70;
+$color-gray-5: #808284;
+$color-gray-6: #939597;
+$color-gray-7: #a7a9ab;
+$color-gray-8: #bbbdbf;
+$color-gray-9: #d1d2d4;
+$color-gray-10: #e6e7e8;
+
+$black: #000;
+$white: #fff;
+
+// Разное
+$hover-effect: 0 0 10px 0 $color-gray-9;
