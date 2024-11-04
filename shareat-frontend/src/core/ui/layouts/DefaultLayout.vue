@@ -10,7 +10,7 @@
       :temporary="isMobileMode">
       <DrawerNavigation
         :is-open="isMobileMode ? false : !GET_MENU_STATUS"
-        :nav-items="navItems"
+        :nav-items="filteredNavItems"
         @toggle:menu="TOGGLE_MENU" />
     </v-navigation-drawer>
 
@@ -36,6 +36,7 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
+import store from '@/store';
 import DrawerNavigation from '@/core/ui/components/DrawerNavigation.vue';
 import { Logout } from '@/modules/auth/repositories/auth-repository';
 
@@ -78,7 +79,26 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['GET_MENU_STATUS']),
+    ...mapGetters(['GET_MENU_STATUS', 'auth/GET_USER_DATA']),
+
+    filteredNavItems() {
+      const userData = store.getters['auth/GET_USER_DATA'];
+
+      const roleId = userData ? userData.role_id : -1;
+
+      return this.navItems.filter(item => {
+        switch (roleId) {
+          case 0: // Admin
+            return true;
+          case 1: // User
+            return item.title !== 'Администрирование' && item.title !== 'Заказы';
+          case 2: // Manager
+            return item.title !== 'Администрирование';
+          default:
+            return false;
+        }
+      });
+    },
 
     isMobileMode() {
       return this.$vuetify.breakpoint.width < 768;

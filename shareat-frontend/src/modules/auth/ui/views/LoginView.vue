@@ -94,7 +94,7 @@ export default {
       try {
         this.ADD_LOADER();
 
-        const user = await Login({ login: this.controls.login, password: this.controls.password });
+        const user = await Login( this.controls.login, this.controls.password );
 
         this.SET_AUTH_DATA(user);
 

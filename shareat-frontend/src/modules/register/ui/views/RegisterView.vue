@@ -26,18 +26,6 @@
                 <v-col cols="12">
                   <ValidationProvider v-slot="{ errors }" rules="required">
                     <v-text-field
-                      v-model="controls.login"
-                      :error-messages="errors"
-                      outlined
-                      color="main-color"
-                      label="Логин"
-                      autocomplete="new-password" />
-                  </ValidationProvider>
-                </v-col>
-
-                <v-col cols="12">
-                  <ValidationProvider v-slot="{ errors }" rules="required">
-                    <v-text-field
                       v-model="controls.email"
                       :error-messages="errors"
                       outlined
@@ -118,7 +106,6 @@ export default {
 
       controls: {
         fullName: null,
-        login: null,
         password: null,
         passwordAgain: null,
         email: null,
@@ -136,10 +123,12 @@ export default {
         this.ADD_LOADER();
 
         const user = await Register({
-          fullName: this.controls.fullName,
-          login: this.controls.login,
+          firstname: this.controls.fullName,
+          username: this.controls.email,
           password: this.controls.password,
           email: this.controls.email,
+          secondname: '',
+          role_id: 1,
         });
 
         this.SET_AUTH_DATA(user);

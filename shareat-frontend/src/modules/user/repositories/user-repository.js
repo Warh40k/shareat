@@ -1,10 +1,10 @@
 import httpClient from '@/core/plugins/http-client';
 
-const apiRoute = '/api/User';
+const apiRoute = '/api/personal';
 
 export async function GetUserData() {
   const result = await httpClient
-    .get(`${apiRoute}/GetUserData`)
+    .get(`${apiRoute}/getUserData`)
     .then((response) => response.data)
     .catch((error) => {
       throw new Error(error?.response?.data?.message || 'Ошибка получения данных пользователя');
