@@ -31,7 +31,6 @@ async def get_user_data(user: User = Depends(current_active_user),
         raise e
 
 
-
 @router.post("/resetPassword", status_code=status.HTTP_200_OK, name="users:reset_password",
              responses={
                  status.HTTP_200_OK: {"description": "Password updated successfully."},

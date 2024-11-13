@@ -1,8 +1,8 @@
-"""Add Client, Admin, Employee tables
+"""Add tables admin, client, employee
 
-Revision ID: d8bc460dcd4f
+Revision ID: 1565e5310926
 Revises: 1687dd620f0b
-Create Date: 2024-10-26 22:23:10.157403
+Create Date: 2024-11-12 22:44:26.811781
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'd8bc460dcd4f'
+revision: str = '1565e5310926'
 down_revision: Union[str, None] = '1687dd620f0b'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -23,7 +23,7 @@ def upgrade() -> None:
     op.create_table('admin',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('department', sa.String(), nullable=True),
-    sa.ForeignKeyConstraint(['id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['id'], ['user.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('client',
@@ -31,8 +31,8 @@ def upgrade() -> None:
     sa.Column('address', sa.Text(), nullable=True),
     sa.Column('phone_number', sa.String(), nullable=True),
     sa.Column('hobbies', sa.String(), nullable=True),
-    sa.Column('money', sa.DECIMAL(precision=12, scale=2), nullable=False, default=0),
-    sa.ForeignKeyConstraint(['id'], ['user.id'], ),
+    sa.Column('money', sa.DECIMAL(precision=12, scale=2), nullable=False),
+    sa.ForeignKeyConstraint(['id'], ['user.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('phone_number')
     )
@@ -40,7 +40,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('department', sa.String(), nullable=True),
     sa.Column('position', sa.String(), nullable=True),
-    sa.ForeignKeyConstraint(['id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['id'], ['user.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
