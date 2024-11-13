@@ -7,38 +7,38 @@ from ..models.base_model import Base
 from .base_repository import AbstractRepository
 
 ModelType = TypeVar("ModelType", bound=Base)
-SchemaType = TypeVar("SchemaType", bound=BaseModel)
+CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
+UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
+ReadSchemaType = TypeVar("ReadSchemaType", bound=BaseModel)
 
 
-class SqlAlchemyRepository(AbstractRepository, Generic[ModelType, SchemaType]):
+class SqlAlchemyRepository(AbstractRepository, Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
+
     def __init__(self, model: Type[ModelType], db_session: AsyncSession):
-        self._session_factory = db_session
+        self.session = db_session
         self.model = model
 
-    async def create(self, data: SchemaType) -> ModelType:
-        async with self._session_factory() as session:
-            instance = self.model(**data.model_dump())
-            session.add(instance)
-            await session.commit()
-            await session.refresh(instance)
-            return instance
+    async def create(self, data: CreateSchemaType) -> ModelType:
+        instance = self.model(**data)
+        self.session.add(instance)
+        await self.session.commit()
+        await self.session.refresh(instance)
+        return instance
 
-    async def update(self, data: SchemaType, **filters) -> ModelType:
-        async with self._session_factory() as session:
-            stmt = update(self.model).values(**data.model_dump(exclude_unset=True)).filter_by(**filters).returning(self.model)
-            res = await session.execute(stmt)
-            await session.commit()
-            return res.scalar_one()
+    async def update(self, data: UpdateSchemaType, **filters) -> ModelType:
+        data = {key: value for key, value in data.items() if value is not None}
+        stmt = update(self.model).values(**data).filter_by(**filters).returning(self.model)
+        res = await self.session.execute(stmt)
+        await self.session.commit()
+        return res.scalar_one()
 
     async def delete(self, **filters) -> None:
-        async with self._session_factory() as session:
-            await session.execute(delete(self.model).filter_by(**filters))
-            await session.commit()
+        await self.session.execute(delete(self.model).filter_by(**filters))
+        await self.session.commit()
 
     async def get_single(self, **filters) -> Optional[ModelType] | None:
-        async with self._session_factory() as session:
-            row = await session.execute(select(self.model).filter_by(**filters))
-            return row.scalar_one_or_none()
+        row = await self.session.execute(select(self.model).filter_by(**filters))
+        return row.scalar_one_or_none()
 
     async def get_multi(
             self,
@@ -46,7 +46,6 @@ class SqlAlchemyRepository(AbstractRepository, Generic[ModelType, SchemaType]):
             limit: int = 100,
             offset: int = 0
     ) -> list[ModelType]:
-        async with self._session_factory() as session:
-            stmt = select(self.model).order_by(order).limit(limit).offset(offset)
-            row = await session.execute(stmt)
-            return row.scalars().all()
+        stmt = select(self.model).order_by(*order).limit(limit).offset(offset)
+        row = await self.session.execute(stmt)
+        return row.scalars().all()
