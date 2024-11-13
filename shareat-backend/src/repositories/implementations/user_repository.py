@@ -36,4 +36,3 @@ class UserRepository(SQLAlchemyUserDatabase):
 
 async def get_user_db(db_session: AsyncSession = Depends(db_helper.get_db_session)):
     yield UserRepository(db_session=db_session, model=User)
-
