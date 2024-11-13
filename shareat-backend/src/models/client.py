@@ -8,7 +8,7 @@ from .base_model import Base
 class Client(Base):
     __tablename__ = 'client'
 
-    id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
+    id: Mapped[int] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"), primary_key=True)
     address: Mapped[str] = mapped_column(Text, nullable=True)
     phone_number: Mapped[str] = mapped_column(String, unique=True, nullable=True)
     hobbies: Mapped[str] = mapped_column(String, nullable=True)
