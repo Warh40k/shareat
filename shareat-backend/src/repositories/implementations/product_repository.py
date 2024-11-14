@@ -61,35 +61,38 @@ class ProductRepository(SqlAlchemyRepository[ModelType, ProductCreate, ProductUp
         return product
 
     async def update_with_photos(
-            self, product_id: int, data: UpdateSchemaType, photos: List[str]
+            self, data: UpdateSchemaType, photos: List[str], **filters
     ) -> ModelType:
         data = {key: value for key, value in data.items() if value is not None}
+
+        # 2. Обновление данных товара
         stmt = (
             update(self.model)
             .values(**data)
-            .filter_by(id=product_id)
+            .filter_by(**filters)
             .returning(self.model)
         )
         res = await self.session.execute(stmt)
         product = res.scalar_one_or_none()
 
         if not product:
-            raise ValueError(f"Product with id {product_id} not found")
+            raise ValueError(f"Product with id not found")
 
-        # 2. Удаление старых фотографий
+        # 3. Удаление старых фотографий
         await self.session.execute(
-            delete(Photo).where(Photo.product_id == product_id)
+            delete(Photo).where(Photo.product_id == product.id)
         )
 
-        # 3. Добавление новых фотографий
-        new_photos = [Photo(product_id=product.id, path=path) for path in photos]
-        self.session.add_all(new_photos)
+        # 4. Добавление новых фотографий (если есть)
+        if photos:
+            new_photos = [Photo(product_id=product.id, path=path) for path in photos]
+            self.session.add_all(new_photos)
 
-        # 4. Сохранение изменений
+        # 5. Сохранение изменений
         await self.session.commit()
 
-        # 5. Загрузка продукта с новыми фотографиями
-        await self.session.refresh(product)
+        # 6. Обновляем объект товара, включая связанные фотографии
+        await self.session.refresh(product, ["photos"])
 
         return product
 
