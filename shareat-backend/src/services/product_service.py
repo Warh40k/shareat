@@ -63,7 +63,10 @@ class ProductService(BaseService):
 
     async def update_with_photos(self, pk: int, model: PyModel, photos: List[UploadFile]) -> ReadSchemaType:
         # TODO: add logic with updating photos
-        return convert_product_to_read(await self.repository.update(data=model.model_dump(), id=pk))
+        photo_paths = await self._save_photos(photos)
+
+        return convert_product_to_read(await self.repository.update_with_photos(data=model.model_dump(),
+                                                                                photos=photo_paths, id=pk))
 
     async def _save_photos(self, photos: List[UploadFile]) -> List[str]:
         saved_photo_paths = []
