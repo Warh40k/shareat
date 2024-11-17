@@ -3,12 +3,14 @@
     <v-row>
       <v-col cols="12">
         <v-row>
-          <v-col cols="12" sm="9">
-            <v-btn small tile depressed color="main-color" class="white--text mr-2" @click="showCreateProduct = true">
-              Добавить
-              <v-icon right dark> mdi-plus </v-icon>
-            </v-btn>
-          </v-col>
+          <template v-if="roleId == 2">
+            <v-col cols="12" sm="9">
+              <v-btn small tile depressed color="main-color" class="white--text mr-2" @click="showCreateProduct = true">
+                Добавить
+                <v-icon right dark> mdi-plus </v-icon>
+              </v-btn>
+            </v-col>
+          </template>
           <v-col cols="12" sm="3">
             <v-text-field
               class="pt-0 mt-0"
@@ -33,15 +35,27 @@
 </template>
 
 <script>
+import store from '@/store';
 import ProductCard from '../components/ProductCard.vue';
 import CreateProductForm from '../components/product/sidebar-modal/CreateProductForm.vue';
 
 export default {
-  name: 'ProductsCategoryView',
+  name: 'ProductsView',
 
   components: {
     ProductCard,
     CreateProductForm,
+  },
+
+  computed: {
+    roleId() {
+      const userData = store.getters['auth/GET_USER_DATA'];
+
+      const roleId = userData ? userData.role_id : -1;
+
+      return roleId;
+
+    }
   },
   data() {
     return {
@@ -52,7 +66,7 @@ export default {
           title: 'Toyota Supra A80',
           description:
             'The Toyota Supra (Japanese: トヨタ・スープラ, Hepburn: Toyota Sūpura) is a sports car and grand tourer manufactured by the Toyota Motor Corporation beginning in 1978. The name "supra" is derived from the Latin prefix, meaning "above", "to surpass" or "go beyond"',
-          price: '10 000',
+          price: '10000',
           image:
             'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Black_1997_Toyota_Supra_Limited_Edition_6_Speed_Twin_Turbo_with_Targa_Top.png/1920px-Black_1997_Toyota_Supra_Limited_Edition_6_Speed_Twin_Turbo_with_Targa_Top.png',
         },
@@ -61,7 +75,7 @@ export default {
           title: 'LADA Granta Sport',
           description:
             'Из особенностей версии: 16-дюймовые литые диски, низкопрофильные шины «Yokohama», передние и задние тормозные диски увеличенного диаметра, уменьшенный на 20 мм дорожный просвет и газонаполненные амортизаторы.',
-          price: '10 000 000',
+          price: '10000000',
           image: 'https://upload.wikimedia.org/wikipedia/commons/1/11/Lada_Granta_2018_facelift.jpg',
         },
         {
@@ -79,7 +93,8 @@ export default {
 
   methods: {
     createProduct() {
-      this.showCreateProduct = true;
+      console.log('create success emited');
+      this.showCreateProduct = false;
     },
   },
 };

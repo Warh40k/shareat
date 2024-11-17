@@ -22,6 +22,7 @@
         <v-icon right dark>mdi-cart</v-icon>
       </v-btn>
 
+    <template v-if="roleId == 2">
       <v-menu offset-y bottom>
         <template #activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on">
@@ -30,7 +31,7 @@
         </template>
 
         <v-list>
-          <v-list-item @click="editCard(cardData.id)">
+          <v-list-item @click="updateCard(cardData)">
             <v-icon>mdi-pencil</v-icon>
             <v-list-item-title class="px-3">Редактировать</v-list-item-title>
           </v-list-item>
@@ -40,7 +41,13 @@
           </v-list-item>
         </v-list>
       </v-menu>
+    </template>
     </div>
+
+    <SidebarModal v-model="showUpdateProduct" title="Изменение продукта">
+      <UpdateProductForm v-if="showUpdateProduct" @success="updateProduct" @cancel="showUpdateProduct = false"
+      :product="cardData"/>
+    </SidebarModal>
 
     <CenterModal title="Удаление продукта" :is-open="showDeleteProduct" @close="showDeleteProduct = false">
       <DeleteProductForm
@@ -54,13 +61,16 @@
 </template>
 
 <script>
+import store from '@/store';
 import DeleteProductForm from '@/modules/catalog/ui/components/product/central-modal/DeleteProductForm.vue';
+import UpdateProductForm from '@/modules/catalog/ui/components/product/sidebar-modal/UpdateProductForm.vue';
 
 export default {
   name: 'ProductCard',
 
   components: {
     DeleteProductForm,
+    UpdateProductForm
   },
 
   props: {
@@ -73,18 +83,40 @@ export default {
   data() {
     return {
       showDeleteProduct: false,
+      showUpdateProduct: false,
+
     };
   },
 
+  computed: {
+    roleId() {
+      const userData = store.getters['auth/GET_USER_DATA'];
+      const roleId = userData ? userData.role_id : -1;
+      return roleId;
+    }
+  },
+
   methods: {
-    editCard(id) {
-      console.log('Редактировать карточку с id:', id);
+    updateCard(data) {
+      this.cardData = data;
+      this.showUpdateProduct = true;
     },
 
     deleteCard(id) {
       console.log('Удалить карточку с id:', id);
       this.showDeleteProduct = true;
     },
+
+    deleteProduct(){
+      console.log('delete success emited');
+      this.showDeleteProduct = false;
+
+    },
+    updateProduct(){
+      console.log('update success emited');
+      this.showUpdateProduct = false;
+
+    }
   },
 };
 </script>

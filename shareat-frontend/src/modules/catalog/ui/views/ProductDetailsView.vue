@@ -23,10 +23,8 @@
               Оформить
               <v-icon right dark>mdi-cart</v-icon>
             </v-btn>
-
              <v-btn small class="white--text text" color="background-color" @click="$router.push('/products')"
-              >Вернуться</v-btn
-            >
+              >Вернуться</v-btn>
           </div>
         </div>
       </v-col>
