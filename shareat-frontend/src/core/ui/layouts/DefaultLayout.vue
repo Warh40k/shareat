@@ -57,7 +57,7 @@ export default {
         {
           title: 'Каталог',
           icon: 'mdi-animation',
-          link: '/catalog',
+          link: '/products',
         },
         {
           title: 'Заказы',

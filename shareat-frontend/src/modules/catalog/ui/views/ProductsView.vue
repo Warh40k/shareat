@@ -3,12 +3,6 @@
     <v-row>
       <v-col cols="12">
         <v-row>
-          <v-col cols="12">
-            <h1 class="text-h6 text-sm-h5 font-weight-bold">Автомобили</h1>
-          </v-col>
-        </v-row>
-
-        <v-row>
           <v-col cols="12" sm="9">
             <v-btn small tile depressed color="main-color" class="white--text mr-2" @click="showCreateProduct = true">
               Добавить
@@ -28,7 +22,7 @@
         </v-row>
       </v-col>
 
-      <v-col v-for="car in carsList" :key="car.id" cols="12" lg="4" xl="3">
+      <v-col v-for="car in carsList" :key="car.id" cols="12">
         <ProductCard :card-data="car" />
       </v-col>
     </v-row>
@@ -43,7 +37,7 @@ import ProductCard from '../components/ProductCard.vue';
 import CreateProductForm from '../components/product/sidebar-modal/CreateProductForm.vue';
 
 export default {
-  name: 'CarsCategoryView',
+  name: 'ProductsCategoryView',
 
   components: {
     ProductCard,
