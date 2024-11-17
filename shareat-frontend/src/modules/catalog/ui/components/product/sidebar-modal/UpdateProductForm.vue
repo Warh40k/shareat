@@ -49,10 +49,10 @@
           <!-- Поле для загрузки картинки -->
           <v-col cols="12">
             <div class="field-label">Изображение товара</div>
-            <template v-if="!imageName">
+            <template v-if="showUpload && !imageName ">
               <label class="file-upload">
                 <v-icon class="white--text my-2">mdi-plus</v-icon>
-                <input type="file" accept="image/png, image/jpeg" @change="onFileChange" />
+                <input type="file" accept="image/png, image/jpeg" format @change="onFileChange" />
               </label>
             </template>
             <v-alert v-if="error" class="my-2" color="error-color" type="error" dismissible>
@@ -69,7 +69,7 @@
                 <p><strong>Размер:</strong> {{ imageSize }}</p>
                 <p><strong>Объем:</strong> {{ imageVolume }} КБ</p>
               </div>
-              <v-btn color="error-color white--text" @click="removeImage">Удалить</v-btn>
+              <v-btn color="error-color white--text" @click="removeImage"><v-icon>mdi-trash-can-outline</v-icon></v-btn>
             </div>
           </v-col>
         </v-row>
@@ -77,7 +77,7 @@
 
       <template #footer>
         <v-btn tile type="submit" class="mr-2 white--text" color="main-color" @click="handleSubmit(submitForm)">
-          Создать
+          Изменить
         </v-btn>
         <v-btn color="pantone-cold-gray" tile outlined @click="cancel"> Отмена </v-btn>
       </template>
@@ -90,23 +90,36 @@ import { mapMutations } from 'vuex';
 import SidebarContentWrapper from '@/core/ui/components/shared/sidebar-modal/SidebarContentWrapper.vue';
 
 export default {
-  name: 'CreateProductForm',
+  name: 'UpdateProductForm',
   components: {
     SidebarContentWrapper,
+  },
+
+  props: {
+    product: {
+      type: Object,
+      required: true,
+    },
+  },
+
+  async created () {
+    await this.showFile(this.product.image);
   },
 
   data() {
     return {
       controls: {
-        title: '',
-        description: '',
-        price: '',
+        id: this.product.id,
+        title: this.product.title,
+        description: this.product.description,
+        price: this.product.price,
       },
       imagePreview: null,
-      imageName: '',
+      imageName: this.product.image,
       imageSize: '',
       imageVolume: '',
       error: '',
+      showUpload: false,
     };
   },
 
@@ -124,10 +137,11 @@ export default {
         this.error = 'Вы не выбрали изображение';
         return
       }
+
       try {
         this.ADD_LOADER();
         // API
-        this.ADD_ALERT({ type: 'success', text: 'Продукт успешно создан' });
+        this.ADD_ALERT({ type: 'success', text: 'Продукт успешно изменен' });
         localStorage.removeItem('productData');
         this.$emit('success');
       } catch (error) {
@@ -139,6 +153,34 @@ export default {
 
     cancel() {
       this.$emit('cancel');
+    },
+
+    async showFile(url){
+
+    //TODO: переписать когда будет работа с картинками на бэке
+      const file = await fetch(url).then(r => r.blob()).then(blob => {
+        return blob
+      });
+
+      this.error = '';
+
+      if (file) {
+        this.imageName = file.name;
+        this.showUpload = false;
+        this.imageVolume = (file.size / 1024).toFixed(2);
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.imagePreview = e.target.result;
+
+          const img = new Image();
+          img.src = e.target.result;
+          img.onload = () => {
+            this.imageSize = `${img.width}x${img.height}`;
+          };
+        };
+        reader.readAsDataURL(file);
+      }
     },
 
     onFileChange(event) {
@@ -154,6 +196,7 @@ export default {
 
       if (file) {
         this.imageName = file.name;
+        this.showUpload = false;
         this.imageVolume = (file.size / 1024).toFixed(2);
 
         const reader = new FileReader();
@@ -175,6 +218,7 @@ export default {
       this.imageName = '';
       this.imageSize = '';
       this.imageVolume = '';
+      this.showUpload = true;
     },
   },
 };
