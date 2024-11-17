@@ -19,10 +19,12 @@
           <div class="mb-4" style="word-wrap: break-word" v-html="product.description"></div>
           <div class="mb-4" style="word-wrap: break-word">Стоимость: {{ product.price }} ₽/час</div>
           <div class="product-btn">
-            <v-btn small color="main-color" right class="white--text text" @click="showMakeOrderForm = true">
-              Оформить
-              <v-icon right dark>mdi-cart</v-icon>
-            </v-btn>
+            <template v-if="roleId == 1">
+              <v-btn small color="main-color" right class="white--text text" @click="showMakeOrderForm = true">
+                Оформить
+                <v-icon right dark>mdi-cart</v-icon>
+              </v-btn>
+            </template>
              <v-btn small class="white--text text" color="background-color" @click="$router.push('/products')"
               >Вернуться</v-btn>
           </div>
@@ -43,6 +45,7 @@
 </template>
 
 <script>
+import store from '@/store';
 import MakeOrderForm from '@/modules/catalog/ui/components/product/central-modal/MakeOrderForm.vue';
 
 export default {
@@ -57,6 +60,14 @@ export default {
       type: Object,
       required: true,
     },
+  },
+
+  computed: {
+    roleId() {
+      const userData = store.getters['auth/GET_USER_DATA'];
+      const roleId = userData ? userData.role_id : -1;
+      return roleId;
+    }
   },
 
   data() {
