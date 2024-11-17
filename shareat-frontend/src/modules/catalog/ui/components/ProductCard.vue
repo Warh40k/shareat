@@ -1,7 +1,7 @@
 <template>
   <div class="root-card">
     <v-container color class="text-left mx-auto" fluid>
-      <router-link :to="{ name: `car-details`, params: { id: cardData.id, product: cardData } }">
+      <router-link :to="{ name: `product-details`, params: { id: cardData.id, product: cardData } }">
         <v-row>
           <v-col cols="12" lg="8" sm="12">
             <div class="card-title">{{ cardData.title }}</div>
