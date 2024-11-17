@@ -16,6 +16,8 @@ export default {
   },
 
   getters: {
-    GET_USER_DATA: (state) => state.userData,
+    GET_USER_DATA: (state) => {
+      return state.userData;
+    },
   },
 };
