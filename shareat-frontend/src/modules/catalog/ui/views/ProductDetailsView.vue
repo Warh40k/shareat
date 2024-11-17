@@ -19,7 +19,7 @@
           <div class="mb-4" style="word-wrap: break-word" v-html="product.description"></div>
           <div class="mb-4" style="word-wrap: break-word">Стоимость: {{ product.price }} ₽/час</div>
           <div class="product-btn">
-            <v-btn small color="main-color" right class="white--text text">
+            <v-btn small color="main-color" right class="white--text text" @click="showMakeOrderForm = true">
               Оформить
               <v-icon right dark>mdi-cart</v-icon>
             </v-btn>
@@ -29,12 +29,28 @@
         </div>
       </v-col>
     </v-row>
+
+    <CenterModal title="Оформление заказа" :is-open="showMakeOrderForm" @close="showMakeOrderForm = false">
+      <MakeOrderForm
+        v-if="showMakeOrderForm"
+        :id="product.id"
+        :title="product.title"
+        :price="product.price"
+        @success="makeOrder"
+        @cancel="showMakeOrderForm = false" />
+    </CenterModal>
   </v-container>
 </template>
 
 <script>
+import MakeOrderForm from '@/modules/catalog/ui/components/product/central-modal/MakeOrderForm.vue';
+
 export default {
   name: 'ProductDetailsView',
+
+  components: {
+    MakeOrderForm,
+  },
 
   props: {
     product: {
@@ -45,13 +61,13 @@ export default {
 
   data() {
     return {
-      links: [
-        {
-          text: 'Каталог',
-          disabled: false,
-          href: '/products',
-        }
-      ]
+      showMakeOrderForm: false,
+    }
+  },
+  methods: {
+    makeOrder(){
+      console.log('makeOrder success emited');
+      this.showMakeOrderForm = false;
     }
   },
 };

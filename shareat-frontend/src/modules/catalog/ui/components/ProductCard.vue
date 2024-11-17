@@ -17,10 +17,12 @@
       </router-link>
     </v-container>
     <div class="card-footer">
-      <v-btn small color="main-color" right class="white--text text order-btn ml-3">
-        Оформить
-        <v-icon right dark>mdi-cart</v-icon>
-      </v-btn>
+      <template v-if="roleId == 1">
+        <v-btn small color="main-color" right class="white--text text order-btn ml-3" @click="showMakeOrderForm = true">
+          Оформить
+          <v-icon right dark>mdi-cart</v-icon>
+        </v-btn>
+      </template>
 
     <template v-if="roleId == 2">
       <v-menu offset-y bottom>
@@ -57,6 +59,16 @@
         @success="deleteProduct"
         @cancel="showDeleteProduct = false" />
     </CenterModal>
+
+    <CenterModal title="Оформление заказа" :is-open="showMakeOrderForm" @close="showMakeOrderForm = false">
+      <MakeOrderForm
+        v-if="showMakeOrderForm"
+        :id="cardData.id"
+        :title="cardData.title"
+        :price="cardData.price"
+        @success="makeOrder"
+        @cancel="showMakeOrderForm = false" />
+    </CenterModal>
   </div>
 </template>
 
@@ -64,13 +76,15 @@
 import store from '@/store';
 import DeleteProductForm from '@/modules/catalog/ui/components/product/central-modal/DeleteProductForm.vue';
 import UpdateProductForm from '@/modules/catalog/ui/components/product/sidebar-modal/UpdateProductForm.vue';
+import MakeOrderForm from '@/modules/catalog/ui/components/product/central-modal/MakeOrderForm.vue';
 
 export default {
   name: 'ProductCard',
 
   components: {
     DeleteProductForm,
-    UpdateProductForm
+    UpdateProductForm,
+    MakeOrderForm
   },
 
   props: {
@@ -84,7 +98,7 @@ export default {
     return {
       showDeleteProduct: false,
       showUpdateProduct: false,
-
+      showMakeOrderForm: false,
     };
   },
 
@@ -115,6 +129,11 @@ export default {
     updateProduct(){
       console.log('update success emited');
       this.showUpdateProduct = false;
+
+    },
+    makeOrder(){
+      console.log('makeOrder success emited');
+      this.showMakeOrderForm = false;
 
     }
   },
@@ -165,7 +184,7 @@ img {
 
 .card-footer {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   justify-content: space-between; /* Размещаем элементы по краям */
   align-items: center;
 }
