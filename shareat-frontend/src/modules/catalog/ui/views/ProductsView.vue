@@ -35,9 +35,12 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import store from '@/store';
+import ALERT_TYPES from '@/modules/alert/constants/alert-types';
 import ProductCard from '../components/ProductCard.vue';
 import CreateProductForm from '../components/product/sidebar-modal/CreateProductForm.vue';
+import { GetAllProducts } from '../../repositories/catalog-repository';
 
 export default {
   name: 'ProductsView',
@@ -45,6 +48,42 @@ export default {
   components: {
     ProductCard,
     CreateProductForm,
+  },
+  data() {
+    return {
+      showCreateProduct: false,
+
+      carsList: [],
+
+      // carsList: [
+      //   {
+      //     id: 1,
+      //     title: 'Toyota Supra A80',
+      //     description:
+      //       'The Toyota Supra (Japanese: トヨタ・スープラ, Hepburn: Toyota Sūpura) is a sports car and grand tourer manufactured by the Toyota Motor Corporation beginning in 1978. The name "supra" is derived from the Latin prefix, meaning "above", "to surpass" or "go beyond"',
+      //     price: '10000',
+      //     image:
+      //       'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Black_1997_Toyota_Supra_Limited_Edition_6_Speed_Twin_Turbo_with_Targa_Top.png/1920px-Black_1997_Toyota_Supra_Limited_Edition_6_Speed_Twin_Turbo_with_Targa_Top.png',
+      //   },
+      //   {
+      //     id: 2,
+      //     title: 'LADA Granta Sport',
+      //     description:
+      //       'Из особенностей версии: 16-дюймовые литые диски, низкопрофильные шины «Yokohama», передние и задние тормозные диски увеличенного диаметра, уменьшенный на 20 мм дорожный просвет и газонаполненные амортизаторы.',
+      //     price: '10000000',
+      //     image: 'https://upload.wikimedia.org/wikipedia/commons/1/11/Lada_Granta_2018_facelift.jpg',
+      //   },
+      //   {
+      //     id: 3,
+      //     title: 'Red Bull RB7',
+      //     description:
+      //       'Гоночный автомобиль с открытыми колёсами команды Red Bull Racing, разработанный и построенный под руководством Эдриана Ньюи для участия в гонках Формулы-1 сезона 2011 Формулы-1. За рулём этого автомобиля Себастьян Феттель выиграл свой второй титул Чемпиона мира.',
+      //     price: '100',
+      //     image:
+      //       'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Sebastian_Vettel_2011_Malaysia_FP1_1.jpg/1200px-Sebastian_Vettel_2011_Malaysia_FP1_1.jpg',
+      //   },
+      // ],
+    };
   },
 
   computed: {
@@ -54,47 +93,42 @@ export default {
       const roleId = userData ? userData.role_id : -1;
 
       return roleId;
-
-    }
+    },
   },
-  data() {
-    return {
-      showCreateProduct: false,
-      carsList: [
-        {
-          id: 1,
-          title: 'Toyota Supra A80',
-          description:
-            'The Toyota Supra (Japanese: トヨタ・スープラ, Hepburn: Toyota Sūpura) is a sports car and grand tourer manufactured by the Toyota Motor Corporation beginning in 1978. The name "supra" is derived from the Latin prefix, meaning "above", "to surpass" or "go beyond"',
-          price: '10000',
-          image:
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Black_1997_Toyota_Supra_Limited_Edition_6_Speed_Twin_Turbo_with_Targa_Top.png/1920px-Black_1997_Toyota_Supra_Limited_Edition_6_Speed_Twin_Turbo_with_Targa_Top.png',
-        },
-        {
-          id: 2,
-          title: 'LADA Granta Sport',
-          description:
-            'Из особенностей версии: 16-дюймовые литые диски, низкопрофильные шины «Yokohama», передние и задние тормозные диски увеличенного диаметра, уменьшенный на 20 мм дорожный просвет и газонаполненные амортизаторы.',
-          price: '10000000',
-          image: 'https://upload.wikimedia.org/wikipedia/commons/1/11/Lada_Granta_2018_facelift.jpg',
-        },
-        {
-          id: 3,
-          title: 'Red Bull RB7',
-          description:
-            'Гоночный автомобиль с открытыми колёсами команды Red Bull Racing, разработанный и построенный под руководством Эдриана Ньюи для участия в гонках Формулы-1 сезона 2011 Формулы-1. За рулём этого автомобиля Себастьян Феттель выиграл свой второй титул Чемпиона мира.',
-          price: '100',
-          image:
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Sebastian_Vettel_2011_Malaysia_FP1_1.jpg/1200px-Sebastian_Vettel_2011_Malaysia_FP1_1.jpg',
-        },
-      ],
-    };
+
+  created() {
+    this.fetchProducts();
   },
 
   methods: {
+    ...mapMutations('alert', ['ADD_ALERT']),
+    ...mapMutations('preloader', ['ADD_LOADER', 'REMOVE_LOADER']),
+    async fetchProducts() {
+      try {
+        this.ADD_LOADER();
+
+        const result = await GetAllProducts();
+
+        this.carsList = result.map((car) => ({
+          id: car.id,
+          title: car.title,
+          description: car.description,
+          price: car.price_per_day,
+
+          // TODO: сделать красивее
+          image: 'api/images/getImage/' + car.photos[0],
+        }));
+        console.log(this.carsList.image);
+      } catch (error) {
+        this.ADD_ALERT({ type: ALERT_TYPES.ERROR, text: error.message });
+      } finally {
+        this.REMOVE_LOADER();
+      }
+    },
+
     createProduct() {
-      console.log('create success emited');
       this.showCreateProduct = false;
+      this.fetchProducts();
     },
   },
 };

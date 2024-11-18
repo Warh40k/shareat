@@ -89,6 +89,10 @@
 import { mapMutations } from 'vuex';
 import SidebarContentWrapper from '@/core/ui/components/shared/sidebar-modal/SidebarContentWrapper.vue';
 
+import ALERT_TYPES from '@/modules/alert/constants/alert-types';
+
+import { CreateProduct } from '../../../../repositories/catalog-repository';
+
 export default {
   name: 'CreateProductForm',
   components: {
@@ -106,6 +110,7 @@ export default {
       imageName: '',
       imageSize: '',
       imageVolume: '',
+      imageFile: null,
       error: '',
     };
   },
@@ -120,18 +125,28 @@ export default {
     },
 
     async submitForm() {
-      if(!this.imagePreview) {
+      if (!this.imagePreview) {
         this.error = 'Вы не выбрали изображение';
-        return
+        return;
       }
       try {
         this.ADD_LOADER();
-        // API
-        this.ADD_ALERT({ type: 'success', text: 'Продукт успешно создан' });
+
+        const formData = new FormData();
+        formData.append('title', this.controls.title);
+        formData.append('description', this.controls.description);
+        formData.append('price_per_day', this.controls.price);
+        formData.append('in_rent', false);
+        formData.append('is_active', true);
+        formData.append('photos', this.imageFile);
+
+        await CreateProduct(formData);
+        this.ADD_ALERT({ type: ALERT_TYPES.SUCCESS, text: 'Продукт успешно создан' });
+
         localStorage.removeItem('productData');
         this.$emit('success');
       } catch (error) {
-        this.ADD_ALERT({ type: 'error', text: error.message });
+        this.ADD_ALERT({ type: ALERT_TYPES.ERROR, text: error.message });
       } finally {
         this.REMOVE_LOADER();
       }
@@ -153,6 +168,7 @@ export default {
       this.error = '';
 
       if (file) {
+        this.imageFile = file;
         this.imageName = file.name;
         this.imageVolume = (file.size / 1024).toFixed(2);
 
