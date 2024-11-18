@@ -6,7 +6,7 @@
           <v-col cols="12" lg="8" sm="12">
             <div class="card-title">{{ cardData.title }}</div>
             <div class="card-text description">{{ cardData.description }}</div>
-            <div class="card-text">Стоимость: {{ cardData.price }}</div>
+            <div class="card-text">Стоимость: {{ cardData.price }} ₽/день</div>
           </v-col>
           <v-col cols="12" lg="4" sm="12">
             <div class="card-text">
