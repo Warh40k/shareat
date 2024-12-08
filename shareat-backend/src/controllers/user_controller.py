@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
 
-from src.controllers.fastapi_users import fastapi_users, current_active_user
+from src.controllers.fastapi_users import fastapi_users, current_active_user, current_active_clientuser
 from src.models import User
 from src.schemas.user_schema import UserRead, UserUpdate, ResetPasswordRequest, UserDetails
 from src.services.auth.manager import get_user_manager, UserManager
@@ -49,6 +50,23 @@ async def reset_password(
             new_password=reset_request.new_password
         )
         return {"detail": "Password updated successfully"}
+    except HTTPException as e:
+        raise e
+
+
+class BalanceUpdateRequest(BaseModel):
+    amount: int
+
+
+@router.post("/updateBalance", status_code=status.HTTP_200_OK, name="users:update_balance")
+async def update_balance(
+    balance_update: BalanceUpdateRequest,
+    user: User = Depends(current_active_clientuser),
+    user_manager: UserManager = Depends(get_user_manager)
+):
+    try:
+        new_balance = await user_manager.update_balance(user=user, amount=balance_update.amount)
+        return {"detail": "Balance updated successfully.", "new_balance": new_balance}
     except HTTPException as e:
         raise e
 
