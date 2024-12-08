@@ -1,10 +1,11 @@
 from typing import Dict, Any, Type
 
+from sqlalchemy import update
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends
 
 from src.config.database.db_helper import db_helper
-from src.models import User, Base
+from src.models import User, Base, Client
 from fastapi_users.db import SQLAlchemyUserDatabase
 
 
@@ -32,6 +33,25 @@ class UserRepository(SQLAlchemyUserDatabase):
         # Обновляем объект user для возвращения
         await self.session.refresh(user)
         return user
+
+    async def update_client_fields(self, client_id: int, update_fields: dict):
+        """
+        Универсальный метод обновления любых полей клиента.
+
+        :param client_id: ID клиента
+        :param update_fields: Словарь с полями и значениями для обновления
+        """
+        if not update_fields:
+            raise ValueError("Update fields must not be empty")
+
+        statement = (
+            update(Client)
+            .where(Client.id == client_id)
+            .values(**update_fields)
+        )
+        await self.session.execute(statement)
+        await self.session.commit()
+
 
 
 async def get_user_db(db_session: AsyncSession = Depends(db_helper.get_db_session)):
