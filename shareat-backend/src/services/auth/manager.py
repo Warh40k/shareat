@@ -127,6 +127,49 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         except ValueError as e:
             raise HTTPException(status_code=400, detail=f"Validation error: {str(e)}")
 
+    async def update_balance(self, user: User, amount: int) -> int:
+        # Проверяем, что сумма больше нуля
+        if amount <= 0:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="The amount must be greater than zero.",
+            )
+
+        # Проверяем, является ли пользователь клиентом
+        if user.role_id != 1 or not user.client:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Only clients can update their balance.",
+            )
+
+        # Рассчитываем новый баланс
+        new_balance = user.client.money + amount
+
+        # Вызываем репозиторий для обновления баланса
+        await self.user_db.update_client_fields(user.client.id, {"money": new_balance})
+
+        # Возвращаем новый баланс
+        return new_balance
+
+    async def deduct_balance(self, user_id: int, amount: int):
+        """Проверяет баланс пользователя и списывает указанную сумму."""
+        # Получение пользователя
+        user = await self.user_db.get(user_id)
+        if not user or user.role_id != 1 or not user.client:
+            raise HTTPException(
+                status_code=403, detail="Only clients can perform this operation."
+            )
+
+        # Проверка, хватает ли средств
+        if user.client.money < amount:
+            raise HTTPException(
+                status_code=400, detail="Insufficient funds."
+            )
+
+        # Списание средств
+        new_balance = user.client.money - amount
+        await self.user_db.update_client_fields(user.client.id, {"money": new_balance})
+
 
 async def get_user_manager(user_db: UserRepository = Depends(get_user_db)):
     yield UserManager(user_db)

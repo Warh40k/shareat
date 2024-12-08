@@ -40,3 +40,14 @@ class User(SQLAlchemyBaseUserTable[int], Base):
         uselist=False,
         lazy='selectin'
     )
+
+    orders: Mapped["Order"] = relationship(
+        "Order",
+        back_populates="user",
+        cascade="all, delete",
+        uselist=False,
+        lazy='selectin'
+    )
+
+    transactions: Mapped["TransactionHistory"] = relationship("TransactionHistory", back_populates="user",
+                                                              lazy="selectin")

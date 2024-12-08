@@ -5,7 +5,9 @@ __all__ = (
     "Client",
     "Employee",
     "Product",
-    "Photo"
+    "Photo",
+    "Order",
+    "TransactionHistory"
 )
 
 from .base_model import Base
@@ -15,3 +17,5 @@ from .client import Client
 from .employee import Employee
 from .product import Product
 from .photo import Photo
+from .order import Order
+from .transaction_history import TransactionHistory

@@ -49,8 +49,29 @@ services:
       - "8000:8000"
     depends_on:
       - postgres
+      - s3
     restart: unless-stopped
 
+  s3:
+    image: bitnami/minio:latest
+    container_name: s3_service
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./data:/data
+      - ./docker/create-bucket.sh:/usr/local/bin/create-bucket.sh
+    entrypoint: >
+      /bin/sh -c "
+      minio server /data --console-address \":9001\" &
+      sleep 5 &&
+      while ! curl -s http://localhost:9000/minio/health/ready; do sleep 1; done &&
+      /usr/local/bin/create-bucket.sh &&
+      wait
+      "
 volumes:
   pgdata:
     driver: local
