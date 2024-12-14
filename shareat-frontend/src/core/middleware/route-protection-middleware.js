@@ -9,11 +9,14 @@ export default async function checkProtection(to, from, next) {
 
   if (!storeUser) {
     try {
-      const user = await GetUserData();
+      setTimeout( async() => {
+        const user = await GetUserData();
+        store.commit('auth/SET_AUTH_DATA', user);
 
-      store.commit('auth/SET_AUTH_DATA', user);
+        return next();
+      }, 100);
 
-      return next();
+
     } catch (error) {
       store.commit('alert/ADD_ALERT', { type: ALERT_TYPES.ERROR, text: error.message });
       return next({

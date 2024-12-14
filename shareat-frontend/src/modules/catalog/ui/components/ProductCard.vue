@@ -1,12 +1,12 @@
 <template>
   <div class="root-card">
     <v-container color class="text-left mx-auto" fluid>
-      <router-link :to="{ name: `car-details`, params: { id: cardData.id, product: cardData } }">
+      <router-link :to="{ name: `product-details`, params: { id: cardData.id, product: cardData } }">
         <v-row>
           <v-col cols="12" lg="8" sm="12">
             <div class="card-title">{{ cardData.title }}</div>
             <div class="card-text description">{{ cardData.description }}</div>
-            <div class="card-text">Стоимость: {{ cardData.price }}</div>
+            <div class="card-text">Стоимость: {{ cardData.price }} ₽/день</div>
           </v-col>
           <v-col cols="12" lg="4" sm="12">
             <div class="card-text">
@@ -17,11 +17,14 @@
       </router-link>
     </v-container>
     <div class="card-footer">
-      <v-btn small color="main-color" right class="white--text text order-btn ml-3">
-        Оформить
-        <v-icon right dark>mdi-cart</v-icon>
-      </v-btn>
+      <template v-if="roleId == 1">
+        <v-btn small color="main-color" right class="white--text text order-btn ml-3" @click="showMakeOrderForm = true">
+          Оформить
+          <v-icon right dark>mdi-cart</v-icon>
+        </v-btn>
+      </template>
 
+    <template v-if="roleId == 2">
       <v-menu offset-y bottom>
         <template #activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on">
@@ -30,7 +33,7 @@
         </template>
 
         <v-list>
-          <v-list-item @click="editCard(cardData.id)">
+          <v-list-item @click="updateCard(cardData)">
             <v-icon>mdi-pencil</v-icon>
             <v-list-item-title class="px-3">Редактировать</v-list-item-title>
           </v-list-item>
@@ -40,7 +43,13 @@
           </v-list-item>
         </v-list>
       </v-menu>
+    </template>
     </div>
+
+    <SidebarModal v-model="showUpdateProduct" title="Изменение продукта">
+      <UpdateProductForm v-if="showUpdateProduct" @success="updateProduct" @cancel="showUpdateProduct = false"
+      :product="cardData"/>
+    </SidebarModal>
 
     <CenterModal title="Удаление продукта" :is-open="showDeleteProduct" @close="showDeleteProduct = false">
       <DeleteProductForm
@@ -50,17 +59,32 @@
         @success="deleteProduct"
         @cancel="showDeleteProduct = false" />
     </CenterModal>
+
+    <CenterModal title="Оформление заказа" :is-open="showMakeOrderForm" @close="showMakeOrderForm = false">
+      <MakeOrderForm
+        v-if="showMakeOrderForm"
+        :id="cardData.id"
+        :title="cardData.title"
+        :price="cardData.price"
+        @success="makeOrder"
+        @cancel="showMakeOrderForm = false" />
+    </CenterModal>
   </div>
 </template>
 
 <script>
+import store from '@/store';
 import DeleteProductForm from '@/modules/catalog/ui/components/product/central-modal/DeleteProductForm.vue';
+import UpdateProductForm from '@/modules/catalog/ui/components/product/sidebar-modal/UpdateProductForm.vue';
+import MakeOrderForm from '@/modules/catalog/ui/components/product/central-modal/MakeOrderForm.vue';
 
 export default {
   name: 'ProductCard',
 
   components: {
     DeleteProductForm,
+    UpdateProductForm,
+    MakeOrderForm
   },
 
   props: {
@@ -73,18 +97,45 @@ export default {
   data() {
     return {
       showDeleteProduct: false,
+      showUpdateProduct: false,
+      showMakeOrderForm: false,
     };
   },
 
+  computed: {
+    roleId() {
+      const userData = store.getters['auth/GET_USER_DATA'];
+      const roleId = userData ? userData.role_id : -1;
+      return roleId;
+    }
+  },
+
   methods: {
-    editCard(id) {
-      console.log('Редактировать карточку с id:', id);
+    updateCard(data) {
+      this.cardData = data;
+      this.showUpdateProduct = true;
     },
 
     deleteCard(id) {
       console.log('Удалить карточку с id:', id);
       this.showDeleteProduct = true;
     },
+
+    deleteProduct(){
+      console.log('delete success emited');
+      this.showDeleteProduct = false;
+
+    },
+    updateProduct(){
+      console.log('update success emited');
+      this.showUpdateProduct = false;
+
+    },
+    makeOrder(){
+      console.log('makeOrder success emited');
+      this.showMakeOrderForm = false;
+
+    }
   },
 };
 </script>
@@ -133,7 +184,7 @@ img {
 
 .card-footer {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   justify-content: space-between; /* Размещаем элементы по краям */
   align-items: center;
 }

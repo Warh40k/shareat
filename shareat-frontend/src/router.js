@@ -14,7 +14,7 @@ const routes = [
     },
   },
   {
-    path: '/catalog',
+    path: '/products',
     name: 'catalog',
     component: () => import(/* webpackChunkName: "catalog" */ '@/modules/catalog/ui/views/CatalogView.vue'),
     meta: {
@@ -56,16 +56,16 @@ const routes = [
 
   // каталог
   {
-    path: '/cars',
-    name: 'cars',
-    component: () => import(/* webpackChunkName: "cars" */ '@/modules/catalog/ui/views/CarsCategoryView.vue'),
+    path: '/products',
+    name: 'products',
+    component: () => import(/* webpackChunkName: "cars" */ '@/modules/catalog/ui/views/ProductsView.vue'),
     meta: {
       isProtected: true,
     },
   },
   {
-    path: '/cars/:id',
-    name: 'car-details',
+    path: '/products/:id',
+    name: 'product-details',
     component: () => import(/* webpackChunkName: "cars" */ '@/modules/catalog/ui/views/ProductDetailsView.vue'),
     meta: {
       isProtected: true,
@@ -74,22 +74,6 @@ const routes = [
       product: route.params.product,
       id: parseInt(route.params.id, 10),
     }),
-  },
-  {
-    path: '/computers',
-    name: 'computers',
-    component: () => import(/* webpackChunkName: "computers" */ '@/modules/catalog/ui/views/ComputersCategoryView.vue'),
-    meta: {
-      isProtected: true,
-    },
-  },
-  {
-    path: '/sport',
-    name: 'sport',
-    component: () => import(/* webpackChunkName: "sport" */ '@/modules/catalog/ui/views/SportsCategoryView.vue'),
-    meta: {
-      isProtected: true,
-    },
   },
   {
     path: '/profile',

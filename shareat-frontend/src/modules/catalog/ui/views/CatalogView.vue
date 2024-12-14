@@ -8,8 +8,8 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col v-for="(card, index) in rootCards" :key="index" class="col-12 col-sm-6 col-lg-4">
-            <CategoryRootCard :card-data="card" />
+          <v-col cols="12">
+            <ProductsView />
           </v-col>
         </v-row>
       </v-col>
@@ -21,34 +21,13 @@
 </template>
 
 <script>
-import CategoryRootCard from '../components/CategoryRootCard.vue';
+import ProductsView from '../views/ProductsView.vue';
 
 export default {
   name: 'CatalogView',
 
   components: {
-    CategoryRootCard,
-  },
-
-  data() {
-    return {
-      rootCards: [
-        {
-          title: 'Автомобили',
-          pathName: 'cars',
-        },
-
-        {
-          title: 'Электроника',
-          pathName: 'computers',
-        },
-
-        {
-          title: 'Спортивный инвентарь',
-          pathName: 'sport',
-        },
-      ],
-    };
+    ProductsView,
   },
 };
 </script>

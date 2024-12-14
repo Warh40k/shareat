@@ -3,7 +3,7 @@ module.exports = {
   env: {
     node: true,
     browser: true,
-    es6: true,
+    es2022: true,
   },
   extends: ['plugin:vue/recommended', '@vue/airbnb', 'prettier'],
   plugins: ['import', 'prettier'],
