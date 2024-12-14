@@ -15,14 +15,38 @@ services:
     container_name: db_shareat
     image: postgres:16
     volumes:
-      - ./postgres/postgres_database:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data/pgdata
     ports:
       - 5432:5432
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: shareat
+      PGDATA: /var/lib/postgresql/data/pgdata
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    command: >
+      postgres -c max_connections=1000
+               -c shared_buffers=256MB
+               -c effective_cache_size=768MB
+               -c maintenance_work_mem=64MB
+               -c checkpoint_completion_target=0.7
+               -c wal_buffers=16MB
+               -c default_statistics_target=100
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d shareat" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    tty: true
+    stdin_open: true
 
   pgadmin:
     container_name: pgadmin
@@ -30,6 +54,7 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=pgAdmin@pg.com
       - PGADMIN_DEFAULT_PASSWORD=Password
+    user: root
     ports:
       - 5555:80
     volumes:
@@ -47,12 +72,12 @@ services:
     env_file:
       - shareat-backend/.env-non-dev
     command: ["/app/docker/app.sh"]
-
     ports:
       - 8000:8000
     restart: unless-stopped
     depends_on:
       - postgres
+      - s3
 
   frontend:
     container_name: frontend
@@ -62,6 +87,32 @@ services:
     ports:
       - 8080:8080
     restart: unless-stopped
+
+  s3:
+    image: bitnami/minio:latest
+    container_name: s3_service
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin123
+    user: root
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./shareat-backend/data:/data
+      - ./shareat-backend/docker/create-bucket.sh:/usr/local/bin/create-bucket.sh
+    entrypoint: >
+      /bin/sh -c "
+      minio server /data --console-address \":9001\" &
+      sleep 5 &&
+      while ! curl -s http://localhost:9000/minio/health/ready; do sleep 1; done &&
+      /usr/local/bin/create-bucket.sh &&
+      wait
+      "
+
+volumes:
+  pgdata:
+    driver: local
 
 networks:
   camunda-network:

@@ -25,7 +25,7 @@
       </v-col>
 
       <v-col v-for="car in carsList" :key="car.id" cols="12">
-        <ProductCard :card-data="car" />
+        <ProductCard :card-data="car" @deleted="deleteProduct" @updated="updateProduct" />
       </v-col>
     </v-row>
     <SidebarModal v-model="showCreateProduct" title="Создание продукта">
@@ -116,14 +116,21 @@ export default {
           price: car.price_per_day,
 
           // TODO: сделать красивее
-          image: 'api/images/getImage/' + car.photos[0],
+          image: 'http://localhost:8000/api/catalog/getPhoto/' + car.photos[0],
         }));
-        console.log(this.carsList.image);
       } catch (error) {
         this.ADD_ALERT({ type: ALERT_TYPES.ERROR, text: error.message });
       } finally {
         this.REMOVE_LOADER();
       }
+    },
+
+    deleteProduct() {
+      this.fetchProducts();
+    },
+
+    updateProduct() {
+      this.fetchProducts();
     },
 
     createProduct() {

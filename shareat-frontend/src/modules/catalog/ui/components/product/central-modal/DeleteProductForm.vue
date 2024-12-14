@@ -13,6 +13,8 @@
 <script>
 import { mapMutations } from 'vuex';
 
+import { DeleteProduct } from '../../../../repositories/catalog-repository';
+
 import ALERT_TYPES from '@/modules/alert/constants/alert-types';
 
 export default {
@@ -36,7 +38,7 @@ export default {
     async onSubmit() {
       try {
         this.ADD_LOADER();
-        //await DeleteProduct(this.id);
+        await DeleteProduct(this.id);
         this.ADD_ALERT({ type: ALERT_TYPES.SUCCESS, text: 'Продукт успешно удален' });
         this.$emit('success');
       } catch (error) {

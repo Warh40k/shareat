@@ -10,7 +10,7 @@
           </v-col>
           <v-col cols="12" lg="4" sm="12">
             <div class="card-text">
-              <img :src="cardData.image" alt="Изображение автомобиля" />
+              <img :src="cardData.image" alt="Изображение товара" />
             </div>
           </v-col>
         </v-row>
@@ -116,19 +116,18 @@ export default {
       this.showUpdateProduct = true;
     },
 
-    deleteCard(id) {
-      console.log('Удалить карточку с id:', id);
+    deleteCard() {
       this.showDeleteProduct = true;
     },
 
     deleteProduct(){
-      console.log('delete success emited');
       this.showDeleteProduct = false;
-
+      this.$emit('deleted');
     },
+
     updateProduct(){
-      console.log('update success emited');
       this.showUpdateProduct = false;
+      this.$emit('updated');
 
     },
     makeOrder(){
