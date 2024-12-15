@@ -23,7 +23,9 @@
           </v-col>
         </v-row>
       </v-col>
-
+      <template v-if="carsList.length == 0">
+        <h3>Каталог пуст</h3>
+      </template>
       <v-col v-for="car in carsList" :key="car.id" cols="12">
         <ProductCard :card-data="car" @deleted="deleteProduct" @updated="updateProduct" />
       </v-col>
