@@ -1,3 +1,5 @@
+import asyncio
+import mimetypes
 import os
 from typing import List
 from uuid import uuid4
@@ -102,7 +104,14 @@ class ProductService(BaseService):
         Получает файл из S3 через S3Service и возвращает его как поток.
         """
         try:
-            file_stream, content_type = await self.s3_service.get_file(f"photos/{photo_name}")
+            file_key = f"photos/{photo_name}"
+            file_stream = self.s3_service.get_file(file_key)
+
+            # Определяем Content-Type
+            content_type, _ = mimetypes.guess_type(photo_name)
+            if not content_type:
+                content_type = "application/octet-stream"
+
             return StreamingResponse(
                 file_stream,
                 media_type=content_type,
