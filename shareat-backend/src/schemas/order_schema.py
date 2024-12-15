@@ -2,7 +2,6 @@ from typing import Optional
 from datetime import date, datetime
 from decimal import Decimal
 from pydantic import BaseModel, field_validator
-from enum import Enum
 
 from src.models.order import OrderStatusEnum
 
@@ -22,7 +21,6 @@ class OrderBase(BaseModel):
         if isinstance(value, int):  # Если приходит число, преобразуем в OrderStatusEnum
             return OrderStatusEnum.from_int(value)
         return value
-
 
 
 class OrderCreate(BaseModel):

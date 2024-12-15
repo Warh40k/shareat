@@ -13,7 +13,7 @@ COPY pyproject.toml poetry.lock* ./
 RUN pip install --no-cache-dir poetry
 
 # Устанавливаем зависимости в системную среду, чтобы не использовать poetry run
-RUN poetry config virtualenvs.create false && poetry install --no-root --without dev
+RUN poetry config virtualenvs.create false && poetry lock && poetry install --no-root --without dev
 
 # Копируем оставшиеся файлы проекта
 COPY . .
