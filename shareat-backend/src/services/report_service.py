@@ -1,7 +1,9 @@
 import io
+import os
 from datetime import datetime
 
-from fastapi import Depends, UploadFile
+from fastapi import Depends, UploadFile, HTTPException
+from starlette.responses import StreamingResponse
 
 from src.config.project_config import settings
 from src.models import User, Report
@@ -16,7 +18,7 @@ from src.report_type.report_factory import ReportFactory
 from src.services.s3_service import S3Service, get_s3_service
 
 
-class BaseReportService(BaseService):
+class ReportService(BaseService):
     def __init__(self, repository, product_service: ProductService, order_service: OrderService, user_service: UserManager, s3_service: S3Service):
         super().__init__(repository)
         self.user_service = user_service
@@ -73,12 +75,27 @@ class BaseReportService(BaseService):
     async def get(self, pk: int) -> ReadSchemaType:
         report = await self.repository.get_single(id=pk)
         if not report:
-            return None
-        resp = ReportRead(type=report.type, key=report.key, date=report.date, author_id=report.author_id)
+            return ReportRead()
+        resp = ReportRead(id=report.id, type=report.type, key=report.key, date=report.date, author_id=report.author_id)
         return ReportRead.model_validate(resp)
 
-    def generate(self, report_type: str, params: dict):
-        pass
+    async def get_report(self, report_key: str) -> StreamingResponse:
+        """
+        Получает файл из S3 через S3Service и возвращает его как поток.
+        """
+        try:
+            file_stream, content_type = await self.s3_service.get_file(f"{report_key}")
+            return StreamingResponse(
+                file_stream,
+                media_type="application/pdf",
+                headers={
+                    "Content-Disposition": f"inline; filename={os.path.basename(report_key)}"
+                }
+            )
+        except FileNotFoundError:
+            raise HTTPException(status_code=404, detail="Photo not found")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
 
 async def get_report_service(
@@ -88,11 +105,12 @@ async def get_report_service(
     order_service: OrderService = Depends(get_order_service),
     s3_service: S3Service = Depends(get_s3_service),
 ):
-    yield BaseReportService(repository=report_db, product_service=product_service, user_service=user_service, order_service=order_service, s3_service=s3_service)
+    yield ReportService(repository=report_db, product_service=product_service, user_service=user_service, order_service=order_service, s3_service=s3_service)
 
 def convert_product_to_read(report: Report) -> ReportRead | None:
     if report:
         return ReportRead(
+            id = report.id,
             type = report.type,
             key = report.key,
             date = report.date,

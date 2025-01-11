@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 
 class ReportBase(BaseModel):
+    id: Optional[int] = None
     type: str
     key: Optional[str]
     date: Optional[datetime]
