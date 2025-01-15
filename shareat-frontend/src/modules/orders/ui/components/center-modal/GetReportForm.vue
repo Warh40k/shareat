@@ -43,7 +43,6 @@ export default {
     async onSubmit() {
       try {
         var report = {
-          id: 0,
           type: this.items.find(item => item === this.select).value,
           key: "",
           date: new Date(),

@@ -38,6 +38,14 @@ const routes = [
     },
   },
   {
+    path: '/reports',
+    name: 'reports',
+    component: () => import(/* webpackChunkName: "orders" */ '@/modules/reports/ui/views/ReportsView.vue'),
+    meta: {
+      isProtected: true,
+    },
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import(/* webpackChunkName: "login" */ '@/modules/auth/ui/views/LoginView.vue'),

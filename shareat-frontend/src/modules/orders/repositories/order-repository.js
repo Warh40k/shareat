@@ -15,3 +15,29 @@ export async function CreateReport(data) {
   return result;
 }
 
+export async function GetAllReports() {
+  const url = `${apiRoute}/getReports`;
+
+  const result = await httpClient
+    .get(url)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw new Error(error?.response?.data?.message || 'Ошибка заказа отчета');
+    });
+
+  return result;
+}
+
+export async function DownloadReport(key) {
+  const url = `${apiRoute}/getReport/${key}`;
+
+  const result = await httpClient
+    .get(url)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw new Error(error?.response?.data?.message || 'Ошибка заказа отчета');
+    });
+
+  return result;
+}
+

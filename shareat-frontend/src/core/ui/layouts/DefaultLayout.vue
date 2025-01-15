@@ -65,6 +65,11 @@ export default {
           link: '/orders',
         },
         {
+          title: 'Отчеты',
+          icon: 'mdi-note-text-outline',
+          link: '/reports',
+        },
+        {
           title: 'Личный кабинет',
           icon: 'mdi-account',
           link: '/profile',
@@ -91,7 +96,7 @@ export default {
           case 0: // Admin
             return true;
           case 1: // User
-            return item.title !== 'Администрирование' && item.title !== 'Заказы';
+            return item.title !== 'Администрирование' && item.title !== 'Заказы' && item.title !== 'Отчеты';
           case 2: // Manager
             return item.title !== 'Администрирование';
           default:
