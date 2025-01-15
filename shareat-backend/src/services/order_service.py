@@ -3,10 +3,8 @@ from typing import List, Optional
 
 from fastapi import Depends, HTTPException
 
-from src.models import Order
 from src.models.order import OrderStatusEnum
 from src.repositories.sqlalchemy_repository import ReadSchemaType
-from src.schemas.base_schema import PyModel
 from src.schemas.order_schema import OrderRead, OrderUpdate, OrderCreate
 from src.services.auth.manager import UserManager, get_user_manager
 from src.services.base_service import BaseService

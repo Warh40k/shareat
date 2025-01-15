@@ -7,10 +7,12 @@ __all__ = (
     "Product",
     "Photo",
     "Order",
-    "TransactionHistory"
+    "TransactionHistory",
+    "Report"
 )
 
 from .base_model import Base
+from .report import Report
 from .user import User
 from .admin import Admin
 from .client import Client

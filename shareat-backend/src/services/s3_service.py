@@ -57,7 +57,7 @@ class S3Service:
                     Key=s3_path,
                     ExtraArgs={"ACL": "public-read"}  # Делаем файл доступным публично
                 )
-            return f"https://{self.bucket_name}.s3.amazonaws.com/{s3_path}"
+            return s3_path
         except NoCredentialsError:
             raise RuntimeError("AWS credentials not found")
         except Exception as e:
