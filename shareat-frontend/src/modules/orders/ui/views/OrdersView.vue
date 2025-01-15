@@ -8,6 +8,12 @@
           </v-col>
         </v-row>
         <v-row>
+          <v-col cols="12" sm="9">
+            <v-btn small color="main-color" right class="white--text text" @click="showMakeOrderForm = true">
+                Заказать отчет
+                <v-icon right dark>mdi-note-text-outline</v-icon>
+              </v-btn>
+          </v-col>
           <v-col cols="12" sm="3">
             <v-text-field
               v-model="searchValue"
