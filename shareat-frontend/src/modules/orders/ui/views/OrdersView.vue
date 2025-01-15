@@ -9,7 +9,7 @@
         </v-row>
         <v-row>
           <v-col cols="12" sm="9">
-            <v-btn small color="main-color" right class="white--text text" @click="showMakeOrderForm = true">
+            <v-btn small color="main-color" right class="white--text text" @click="showGetReport = true">
                 Заказать отчет
                 <v-icon right dark>mdi-note-text-outline</v-icon>
               </v-btn>
@@ -133,6 +133,10 @@
     <SidebarModal v-model="showOrder" title="Просмотр заказа">
       <OrderViewForm v-if="showOrder" :order="currentOrder" @cancel="showOrder = false" />
     </SidebarModal>
+
+    <CenterModal title="Заказ отчета" :is-open="showGetReport" @close="showGetReport = false">
+      <GetReportForm v-if="showGetReport" @success="getReport" @cancel="showGetReport = false" />
+    </CenterModal>
   </v-container>
 </template>
 
@@ -144,12 +148,13 @@ import ALERT_TYPES from '@/modules/alert/constants/alert-types';
 import ConfirmOrderForm from '../components/center-modal/ConfirmOrderForm.vue';
 import ConfirmReturnForm from '../components/center-modal/ConfirmReturnForm.vue';
 import CheckFineForm from '../components/center-modal/CheckFineForm.vue';
+import GetReportForm from '../components/center-modal/GetReportForm.vue';
 import OrderViewForm from '../components/sidebar-modal/OrderViewForm.vue';
 
 export default {
   name: 'OrdersView',
 
-  components: { ConfirmOrderForm, ConfirmReturnForm, CheckFineForm, OrderViewForm },
+  components: { ConfirmOrderForm, ConfirmReturnForm, CheckFineForm, OrderViewForm, GetReportForm },
 
   data() {
     return {
@@ -157,6 +162,7 @@ export default {
       showConfirmOrder: false,
       showConfirmReturn: false,
       showCheckFine: false,
+      showGetReport: false,
 
       statusesList: [
         {
@@ -303,6 +309,14 @@ export default {
     checkFine() {
       this.showCheckFine = false;
       this.currentOrder = null;
+    },
+
+    clickGetReportBtn() {
+      this.showGetReport = true;
+    },
+
+    getReport() {
+      this.showGetReport = false;
     },
 
     searchInput() {
