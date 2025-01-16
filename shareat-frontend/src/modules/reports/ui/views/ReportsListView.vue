@@ -19,7 +19,7 @@
         <h3>Каталог пуст</h3>
       </template>
       <v-col v-for="report in reportList" :key="report.id" cols="12">
-        <ReportCard :card-data="report" @deleted="deleteReport" @updated="updateReport" />
+        <ReportCard :card-data="report" />
       </v-col>
     </v-row>
   </v-container>
@@ -67,14 +67,6 @@ export default {
       } finally {
         this.REMOVE_LOADER();
       }
-    },
-
-    deleteReport() {
-      this.fetchProducts();
-    },
-
-    updateReport() {
-      this.fetchProducts();
     },
   },
 };

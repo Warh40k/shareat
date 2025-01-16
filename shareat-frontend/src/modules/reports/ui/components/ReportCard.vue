@@ -46,7 +46,15 @@ export default {
        try {
         this.ADD_LOADER();
 
-        await DownloadReport(key);
+        var report = await DownloadReport(key);
+        const blob = new Blob([report], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${key.split("/")[2]}.pdf`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+
       } catch (error) {
         this.ADD_ALERT({ type: ALERT_TYPES.ERROR, text: error.message });
       } finally {

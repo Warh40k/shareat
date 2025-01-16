@@ -32,7 +32,7 @@ export async function DownloadReport(key) {
   const url = `${apiRoute}/getReport/${key}`;
 
   const result = await httpClient
-    .get(url)
+    .get(url, { responseType: 'blob' })
     .then((response) => response.data)
     .catch((error) => {
       throw new Error(error?.response?.data?.message || 'Ошибка заказа отчета');
